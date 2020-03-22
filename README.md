@@ -1,0 +1,1 @@
+# Dynamic_Static.VkXmlParser
