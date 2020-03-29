@@ -230,8 +230,8 @@ inline void print_element_manifest(
     std::cout << std::string(80, '=') << std::endl;
     std::cout << elementManifestName << " : " << elementManifest.size() << std::endl;
     for (const auto& itr : elementManifest) {
+        std::cout << tab(1) << std::string(40, '-') << std::endl;
         print_element(itr.second, 1);
-        std::cout << std::endl;
     }
 }
 
@@ -241,7 +241,7 @@ int main(int argc, char* argv[])
         print_help();
     } else {
         std::string vkXmlFilePath = argc > 1 ? argv[1] : std::string();
-        vkXmlFilePath = "C:/Users/purcellp/Documents/vk.xml";
+        vkXmlFilePath = "D:/Users/purcellp/Documents/vk.xml";
         dst::vk::xml::Manifest vkXmlManifest(vkXmlFilePath);
         std::cout << std::endl;
         std::cout << "Vulkan XML Manifest" << std::endl;
