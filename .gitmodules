@@ -4,3 +4,6 @@
 [submodule "external/Dynamic_Static.Core"]
     path = external/Dynamic_Static.Core
     url = https://github.com/DynamicStatic/Dynamic_Static.Core.git
+[submodule "external/tinyxml2"]
+	path = external/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
