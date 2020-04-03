@@ -12,7 +12,6 @@
 
 #include <iomanip>
 #include <iostream>
-#include <stdexcept>
 
 /**
 TODO : Documentation

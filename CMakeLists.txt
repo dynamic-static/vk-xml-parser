@@ -10,13 +10,15 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 project(Dynamic_Static.VkXmlParser VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
+set(dynamic_static "${CMAKE_CURRENT_LIST_DIR}/../")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
-set(externalDirectory "${CMAKE_CURRENT_LIST_DIR}/external/")
+include("${dynamic_static}/Dynamic_Static.CMake/Dynamic_Static.ex.cmake")
+DstAddSubdirectory("Dynamic_Static.Core")
 
 # External dependencies
-add_subdirectory("${externalDirectory}/Dynamic_Static.Core/")
+set(externalDirectory "${CMAKE_CURRENT_LIST_DIR}/external/")
 include(tinyxml2)
-enable_testing()
+
 # Dynamic_Static.VkXmlParser library
 set(includeDirectory "${CMAKE_CURRENT_LIST_DIR}/include/")
 set(includePath "${includeDirectory}/dynamic_static/vk-xml-parser/")
@@ -49,6 +51,7 @@ DstAddStaticLibrary(
 # vk-api-manifest-dump executable
 DstAddExecutable(
     target vk-api-manifest-dump
+    folder dynamic_static.vk-xml-parser/
     linkLibraries dynamic_static.vk-xml-parser
     sourceFiles "${CMAKE_CURRENT_LIST_DIR}/vk-api-manifest-dump.cpp"
 )
