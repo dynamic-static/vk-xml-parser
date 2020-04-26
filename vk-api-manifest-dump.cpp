@@ -236,12 +236,13 @@ inline void print_element_manifest(
 
 int main(int argc, char* argv[])
 {
+    #if 0
     if (false && argc <= 1) {
         print_help();
     } else {
         std::string vkXmlFilePath = argc > 1 ? argv[1] : std::string();
-        vkXmlFilePath = "D:/Users/purcellp/Documents/vk.xml";
-        dst::vk::xml::Manifest vkXmlManifest(vkXmlFilePath);
+    #endif
+        dst::vk::xml::Manifest vkXmlManifest;
         std::cout << std::endl;
         std::cout << "Vulkan XML Manifest" << std::endl;
         print_element_manifest("platforms", vkXmlManifest.platforms);
@@ -251,6 +252,8 @@ int main(int argc, char* argv[])
         print_element_manifest("structures", vkXmlManifest.structures);
         print_element_manifest("functions", vkXmlManifest.functions);
         print_element_manifest("extensions", vkXmlManifest.extensions);
+    #if 0
     }
+    #endif
     return 0;
 }

@@ -38,10 +38,10 @@ public:
     /**
     TODO : Documentation
     */
-    inline Manifest(const std::string& vkXmlFilePath)
+    inline Manifest(const std::string& vkXmlFilePath = std::string())
     {
         tinyxml2::XMLDocument vkXml;
-        auto result = vkXml.LoadFile(!vkXmlFilePath.empty() ? vkXmlFilePath.c_str() : nullptr);
+        auto result = vkXml.LoadFile(!vkXmlFilePath.empty() ? vkXmlFilePath.c_str() : VULKAN_XML);
         if (result == tinyxml2::XML_SUCCESS) {
             const auto& registryXmlElement = first_child_element(vkXml, "registry");
             platforms = Platform::Manifest(registryXmlElement);

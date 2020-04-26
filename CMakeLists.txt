@@ -17,6 +17,9 @@ DstAddSubdirectory("Dynamic_Static.Core")
 
 # External dependencies
 set(externalDirectory "${CMAKE_CURRENT_LIST_DIR}/external/")
+find_package(Vulkan REQUIRED)
+set(Vulkan_SDK_DIR "${Vulkan_INCLUDE_DIRS}/../")
+set(Vulkan_XML "${Vulkan_SDK_DIR}/share/vulkan/registry/vk.xml")
 include(tinyxml2)
 
 # Dynamic_Static.VkXmlParser library
@@ -46,6 +49,8 @@ DstAddStaticLibrary(
         "${includeDirectory}/dynamic_static/vk-xml-parser.hpp"
     sourceFiles
         "${CMAKE_CURRENT_LIST_DIR}/dynamic_static.vk-xml-parser.cpp"
+    compileDefinitions
+        VULKAN_XML="${Vulkan_XML}"
 )
 
 # vk-api-manifest-dump executable
