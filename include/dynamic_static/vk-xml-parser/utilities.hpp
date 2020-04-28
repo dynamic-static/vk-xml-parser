@@ -84,7 +84,7 @@ inline void process_child_elements(
         auto pChildXmlElement = xmlElement.FirstChildElement(childElementName.c_str());
         pChildXmlElement;
         pChildXmlElement = pChildXmlElement->NextSiblingElement(childElementName.c_str())
-        ) {
+    ) {
         processElement(*pChildXmlElement);
     }
 }
@@ -102,9 +102,26 @@ inline void process_child_nodes(
         auto pChildXmlNode = xmlElement.FirstChild();
         pChildXmlNode;
         pChildXmlNode = pChildXmlNode->NextSibling()
-    )
-    {
+    ) {
         processNode(*pChildXmlNode);
+    }
+}
+
+/**
+TODO : Documentation
+*/
+template <typename ProcessNodeFunctionType>
+inline void process_sibling_nodes(
+    const tinyxml2::XMLNode& xmlNode,
+    ProcessNodeFunctionType processNode
+)
+{
+    for (
+        auto pSiblingXmlNode = xmlNode.NextSibling();
+        pSiblingXmlNode;
+        pSiblingXmlNode = pSiblingXmlNode->NextSibling()
+    ) {
+        processNode(*pSiblingXmlNode);
     }
 }
 

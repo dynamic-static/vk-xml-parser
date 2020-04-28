@@ -17,6 +17,8 @@
 
 #include <string>
 
+#include <iostream>
+
 namespace dst {
 namespace vk {
 namespace xml {
@@ -59,12 +61,19 @@ public:
         if (pNameXmlElement) {
             name = text(*pNameXmlElement);
         }
+
+        if (name == "blendConstants" ||
+            name == "ppEnabledLayerNames" ||
+            name == "deviceName") {
+            int b = 0;
+        }
+
         length = attribute(xmlElement, "len");
         if (!length.empty()) {
             length = string::split(length, ',')[0];
-            if (length == "ceil(rasterizationSamples / 32)") {
-                length = "(rasterizationSamples + 31) / 32";
-            }
+        }
+        if (!length.empty()) {
+            std::cout << length << std::endl;
         }
         process_child_nodes(
             xmlElement,
@@ -73,9 +82,31 @@ public:
                 auto pValue = node.Value();
                 if (pValue) {
                     std::string value = pValue;
+                    if (value.front() == '[') {
+                        flags |= StaticArray;
+                        if (value.back() == ']') {
+                            length = value;
+                        } else {
+                            process_sibling_nodes(
+                                node,
+                                [&](const tinyxml2::XMLNode& siblingNode)
+                                {
+                                    auto pXmlText = siblingNode.ToText();
+                                    if (pXmlText) {
+                                        pValue = pXmlText->Value();
+                                        length = pValue ? "[" + std::string(pValue) + "]" : std::string();
+                                    }
+                                }
+                            );
+                        }
+                    }
                     if (string::contains(value, "* const")) {
                         flags |= Const | Pointer;
                         type += "* const";
+                        if (string::contains(value, "* const*")) {
+                            flags |= PointerArray;
+                            type += "*";
+                        }
                     } else {
                         if (string::contains(value, "const")) {
                             flags |= Const;
