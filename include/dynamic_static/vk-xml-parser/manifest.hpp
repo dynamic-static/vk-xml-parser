@@ -23,6 +23,7 @@
 
 #include "tinyxml2.h"
 
+#include <map>
 #include <string>
 
 namespace dst {
@@ -57,16 +58,20 @@ public:
             process_element_vendors(functions);
             process_element_vendors(extensions);
             process_extensions();
+            process_object_types();
+            process_structure_types();
         }
     }
 
-    Platform::Manifest platforms;       //!< TODO : Documentation
-    Vendor::Manifest vendors;           //!< TODO : Documentation
-    Handle::Manifest handles;           //!< TODO : Documentation
-    Enumeration::Manifest enumerations; //!< TODO : Documentation
-    Structure::Manifest structures;     //!< TODO : Documentation
-    Function::Manifest functions;       //!< TODO : Documentation
-    Extension::Manifest extensions;     //!< TODO : Documentation
+    Platform::Manifest platforms;                      //!< TODO : Documentation
+    Vendor::Manifest vendors;                          //!< TODO : Documentation
+    Handle::Manifest handles;                          //!< TODO : Documentation
+    Enumeration::Manifest enumerations;                //!< TODO : Documentation
+    Structure::Manifest structures;                    //!< TODO : Documentation
+    Function::Manifest functions;                      //!< TODO : Documentation
+    Extension::Manifest extensions;                    //!< TODO : Documentation
+    std::map<std::string, std::string> objectTypes;    //!< TODO : Documentation
+    std::map<std::string, std::string> structureTypes; //!< TODO : Documentation
 
 private:
     template <typename ElementManifestType>
@@ -132,6 +137,30 @@ private:
             return true;
         }
         return false;
+    }
+
+    inline void process_object_types()
+    {
+        // TODO :
+    }
+
+    inline void process_structure_types()
+    {
+        auto vkStructureTypeEnumerationItr = enumerations.find("VkStructureType");
+        assert(vkStructureTypeEnumerationItr != enumerations.end());
+        const auto& vkStructureTypeEnumeration = vkStructureTypeEnumerationItr->second;
+        for (const auto& vkStructureTypeEnumerator : vkStructureTypeEnumeration.enumerators) {
+            std::string vkStructureTypeName = "Vk";
+            for (auto token : string::split_snake_case(string::remove(vkStructureTypeEnumerator.name, "VK_STRUCTURE_TYPE_"))) {
+                if (!token.empty() && !vendors.count(token)) {
+                    token = string::to_lower(token);
+                    token[0] = string::to_upper(token[0]);
+                }
+                vkStructureTypeName += token;
+            }
+            structureTypes.insert({ vkStructureTypeName, vkStructureTypeEnumerator.name });
+            structureTypes.insert({ vkStructureTypeEnumerator.name, vkStructureTypeName });
+        }
     }
 };
 
