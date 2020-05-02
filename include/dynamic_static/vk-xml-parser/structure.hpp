@@ -36,9 +36,7 @@ public:
     {
         name = attribute(xmlElement, "name");
         alias = attribute(xmlElement, "alias");
-        // TODO : Handle unions
-        // TODO : Handle structextends
-        // TODO : Handle compile guard
+        isUnion = attribute(xmlElement, "category") == "union";
         process_child_elements(
             xmlElement,
             "member",
@@ -54,6 +52,7 @@ public:
 
     std::string vkStructureType;    //!< TODO : Documentation
     std::vector<Parameter> members; //!< TODO : Documentation
+    bool isUnion { false };         //!< TODO : Documentation
 };
 
 /**
@@ -77,7 +76,8 @@ public:
         const auto& xmlElement = first_child_element(registryXmlElement, "types");
         auto pXmlElement = xmlElement.FirstChildElement();
         while (pXmlElement) {
-            if (attribute(*pXmlElement, "category") == "struct") {
+            auto category = attribute(*pXmlElement, "category");
+            if (category == "struct" || category == "union") {
                 insert(Structure(*pXmlElement));
             }
             pXmlElement = pXmlElement->NextSiblingElement();
