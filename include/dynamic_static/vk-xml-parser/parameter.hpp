@@ -17,8 +17,6 @@
 
 #include <string>
 
-#include <iostream>
-
 namespace dst {
 namespace vk {
 namespace xml {
@@ -43,6 +41,7 @@ public:
         PointerArray    = 1 << 6, //!< TODO : Documentation
         StringArray     = 1 << 7, //!< TODO : Documentation
         FunctionPointer = 1 << 8, //!< TODO : Documentation
+        VoidPointer     = 1 << 9, //!< TODO : Documentation
     };
 
     /**
@@ -60,20 +59,24 @@ public:
         auto pNameXmlElement = xmlElement.FirstChildElement("name");
         if (pNameXmlElement) {
             name = text(*pNameXmlElement);
+            auto pMetadataXml = pNameXmlElement->NextSibling();
+            if (pMetadataXml) {
+                length = pMetadataXml->Value();
+                if (!length.empty() && length.front() == '[') {
+                    auto pEnumLengthXml = pMetadataXml->NextSiblingElement("enum");
+                    auto pEnumLengthText = pEnumLengthXml ? pEnumLengthXml->GetText() : nullptr;
+                    auto enumLength = pEnumLengthText ? std::string(pEnumLengthText) : std::string();
+                    if (!enumLength.empty()) {
+                        length = "[" + enumLength + "]";
+                    }
+                } else {
+                    length = std::string();
+                }
+            }
         }
-
-        if (name == "blendConstants" ||
-            name == "ppEnabledLayerNames" ||
-            name == "deviceName") {
-            int b = 0;
-        }
-
-        length = attribute(xmlElement, "len");
-        if (!length.empty()) {
-            length = string::split(length, ',')[0];
-        }
-        if (!length.empty()) {
-            std::cout << length << std::endl;
+        auto lengthAttribute = attribute(xmlElement, "len");
+        if (!lengthAttribute.empty()) {
+            length = string::split(lengthAttribute, ',')[0];
         }
         process_child_nodes(
             xmlElement,
@@ -82,30 +85,16 @@ public:
                 auto pValue = node.Value();
                 if (pValue) {
                     std::string value = pValue;
-                    if (value.front() == '[') {
-                        flags |= StaticArray;
-                        if (value.back() == ']') {
-                            length = value;
-                        } else {
-                            process_sibling_nodes(
-                                node,
-                                [&](const tinyxml2::XMLNode& siblingNode)
-                                {
-                                    auto pXmlText = siblingNode.ToText();
-                                    if (pXmlText) {
-                                        pValue = pXmlText->Value();
-                                        length = pValue ? "[" + std::string(pValue) + "]" : std::string();
-                                    }
-                                }
-                            );
-                        }
-                    }
-                    if (string::contains(value, "* const")) {
+                    if (string::contains(value, "* const*")) {
                         flags |= Const | Pointer;
-                        type += "* const";
-                        if (string::contains(value, "* const*")) {
+                        type += "* const*";
+                        if (string::contains(value, "const")) {
                             flags |= PointerArray;
-                            type += "*";
+                            if (string::contains(type, "const")) {
+                                type += " const";
+                            } else {
+                                type = "const " + type;
+                            }
                         }
                     } else {
                         if (string::contains(value, "const")) {
@@ -146,6 +135,9 @@ public:
         }
         if (string::contains(unqualifiedType, "PFN_")) {
             flags |= Pointer | FunctionPointer;
+        }
+        if (unqualifiedType == "void") {
+            flags |= Pointer | VoidPointer;
         }
     }
 

@@ -50,7 +50,7 @@ DstAddStaticLibrary(
     sourceFiles
         "${CMAKE_CURRENT_LIST_DIR}/dynamic_static.vk-xml-parser.cpp"
     compileDefinitions
-        VULKAN_XML="${Vulkan_XML}"
+        DYNAMIC_STATIC_VK_XML_FILE_PATH="${Vulkan_XML}"
 )
 
 # vk-api-manifest-dump executable
@@ -60,3 +60,14 @@ DstAddExecutable(
     linkLibraries dynamic_static.vk-xml-parser
     sourceFiles "${CMAKE_CURRENT_LIST_DIR}/vk-api-manifest-dump.cpp"
 )
+
+# dynamic_static.cpp-generator.tests
+if(DST_CORE_BUILD_TESTS)
+    set(testsPath "${Dynamic_Static.VkXmlParser_SOURCE_DIR}/tests/")
+    DstAddTests(
+        target
+            dynamic_static.vk-xml-parser
+        sourceFiles
+            "${testsPath}/todo.cpp"
+    )
+endif()

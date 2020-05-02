@@ -242,16 +242,20 @@ int main(int argc, char* argv[])
     } else {
         std::string vkXmlFilePath = argc > 1 ? argv[1] : std::string();
     #endif
-        dst::vk::xml::Manifest vkXmlManifest;
-        std::cout << std::endl;
-        std::cout << "Vulkan XML Manifest" << std::endl;
-        print_element_manifest("platforms", vkXmlManifest.platforms);
-        print_element_manifest("vendors", vkXmlManifest.vendors);
-        print_element_manifest("handles", vkXmlManifest.handles);
-        print_element_manifest("enumerations", vkXmlManifest.enumerations);
-        print_element_manifest("structures", vkXmlManifest.structures);
-        print_element_manifest("functions", vkXmlManifest.functions);
-        print_element_manifest("extensions", vkXmlManifest.extensions);
+        tinyxml2::XMLDocument vkXml;
+        auto result = vkXml.LoadFile(DYNAMIC_STATIC_VK_XML_FILE_PATH);
+        if (result == tinyxml2::XML_SUCCESS) {
+            dst::vk::xml::Manifest vkXmlManifest(vkXml);
+            std::cout << std::endl;
+            std::cout << "Vulkan XML Manifest" << std::endl;
+            print_element_manifest("platforms", vkXmlManifest.platforms);
+            print_element_manifest("vendors", vkXmlManifest.vendors);
+            print_element_manifest("handles", vkXmlManifest.handles);
+            print_element_manifest("enumerations", vkXmlManifest.enumerations);
+            print_element_manifest("structures", vkXmlManifest.structures);
+            print_element_manifest("functions", vkXmlManifest.functions);
+            print_element_manifest("extensions", vkXmlManifest.extensions);
+        }
     #if 0
     }
     #endif

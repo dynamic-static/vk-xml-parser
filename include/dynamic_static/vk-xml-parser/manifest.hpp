@@ -39,28 +39,24 @@ public:
     /**
     TODO : Documentation
     */
-    inline Manifest(const std::string& vkXmlFilePath = std::string())
+    inline Manifest(const tinyxml2::XMLDocument& vkXml)
     {
-        tinyxml2::XMLDocument vkXml;
-        auto result = vkXml.LoadFile(!vkXmlFilePath.empty() ? vkXmlFilePath.c_str() : VULKAN_XML);
-        if (result == tinyxml2::XML_SUCCESS) {
-            const auto& registryXmlElement = first_child_element(vkXml, "registry");
-            platforms = Platform::Manifest(registryXmlElement);
-            vendors = Vendor::Manifest(registryXmlElement);
-            handles = Handle::Manifest(registryXmlElement);
-            enumerations = Enumeration::Manifest(registryXmlElement);
-            structures = Structure::Manifest(registryXmlElement);
-            functions = Function::Manifest(registryXmlElement);
-            extensions = Extension::Manifest(registryXmlElement);
-            process_element_vendors(handles);
-            process_element_vendors(enumerations);
-            process_element_vendors(structures);
-            process_element_vendors(functions);
-            process_element_vendors(extensions);
-            process_extensions();
-            process_object_types();
-            process_structure_types();
-        }
+        const auto& registryXmlElement = first_child_element(vkXml, "registry");
+        platforms = Platform::Manifest(registryXmlElement);
+        vendors = Vendor::Manifest(registryXmlElement);
+        handles = Handle::Manifest(registryXmlElement);
+        enumerations = Enumeration::Manifest(registryXmlElement);
+        structures = Structure::Manifest(registryXmlElement);
+        functions = Function::Manifest(registryXmlElement);
+        extensions = Extension::Manifest(registryXmlElement);
+        process_element_vendors(handles);
+        process_element_vendors(enumerations);
+        process_element_vendors(structures);
+        process_element_vendors(functions);
+        process_element_vendors(extensions);
+        process_extensions();
+        process_object_types();
+        process_structure_types();
     }
 
     Platform::Manifest platforms;                      //!< TODO : Documentation
