@@ -92,15 +92,13 @@ private:
             if (platformItr != platforms.end()) {
                 extension.compileGuard = platformItr->second.compileGuard;
             }
-            for (const auto& extensionEnumeration : extension.enumerations) {
-                auto& enumerationItr = enumerations.find(extensionEnumeration.first);
+            for (auto& extensionEnumeration : extension.enumerations) {
+                auto enumerationItr = enumerations.find(extensionEnumeration.first);
                 assert(enumerationItr != enumerations.end());
                 auto& enumeration = enumerationItr->second;
-                for (const auto& extensionEnumerator : extensionEnumeration.second) {
-                    Enumerator enumerator { };
-                    enumerator.name = extensionEnumerator;
-                    enumerator.compileGuard = extension.compileGuard;
-                    enumeration.enumerators.push_back(enumerator);
+                for (auto& extensionEnumerator : extensionEnumeration.second) {
+                    extensionEnumerator.compileGuard = extension.compileGuard;
+                    enumeration.enumerators.insert(extensionEnumerator);
                 }
             }
             for (const auto& extensionType : extension.types) {

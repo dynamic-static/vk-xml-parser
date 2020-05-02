@@ -57,6 +57,44 @@ public:
 /**
 TODO : Documentation
 */
+bool operator==(const Enumerator& lhs, const Enumerator& rhs)
+{
+    return
+        lhs.name == rhs.name &&
+        lhs.value == rhs.value &&
+        lhs.alias == rhs.alias &&
+        lhs.compileGuard == rhs.compileGuard;
+}
+
+/**
+TODO : Documentation
+*/
+bool operator!=(const Enumerator& lhs, const Enumerator& rhs)
+{
+    return !(lhs == rhs);
+}
+
+/**
+TODO : Documentation
+*/
+bool operator<(const Enumerator& lhs, const Enumerator& rhs)
+{
+    auto tie =
+        [](const Enumerator& obj)
+        {
+            return std::tie(
+                obj.value,
+                obj.name,
+                obj.alias,
+                obj.compileGuard
+            );
+        };
+    return tie(lhs) < tie(rhs);
+}
+
+/**
+TODO : Documentation
+*/
 class Enumeration final
     : public Element
 {
@@ -73,13 +111,13 @@ public:
         bitMask = attribute(xmlElement, "type") == "bitmask";
         auto pXmlElement = xmlElement.FirstChildElement();
         while (pXmlElement) {
-            enumerators.emplace_back(*pXmlElement);
+            enumerators.insert(*pXmlElement);
             pXmlElement = pXmlElement->NextSiblingElement();
         }
     }
 
-    std::vector<Enumerator> enumerators; //!< TODO : Documentation
-    bool bitMask { false };              //!< TODO : Documentation
+    std::set<Enumerator> enumerators; //!< TODO : Documentation
+    bool bitMask { false };           //!< TODO : Documentation
 };
 
 /**

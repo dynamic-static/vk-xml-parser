@@ -68,7 +68,7 @@ public:
                 {
                     auto extends = attribute(enumXmlElement, "extends");
                     if (!extends.empty()) {
-                        enumerations[extends].push_back(attribute(enumXmlElement, "name"));
+                        enumerations[extends].emplace_back(enumXmlElement);
                     }
                 }
             );
@@ -98,17 +98,17 @@ public:
         return requirments.empty() && enumerations.empty() && types.empty() && functions.empty();
     }
 
-    std::string author;                                           //!< TODO : Documentation
-    std::string platform;                                         //!< TODO : Documentation
-    Type type { Type::Instance };                                 //!< TODO : Documentation
-    bool supported { true };                                      //!< TODO : Documentation
-    std::string deprecatedBy;                                     //!< TODO : Documentation
-    std::string obsoletedBy;                                      //!< TODO : Documentation
-    std::string promotedTo;                                       //!< TODO : Documentation
-    std::vector<std::string> requirments;                         //!< TODO : Documentation
-    std::map<std::string, std::vector<std::string>> enumerations; //!< TODO : Documentation
-    std::vector<std::string> types;                               //!< TODO : Documentation
-    std::vector<std::string> functions;                           //!< TODO : Documentation
+    std::string author;                                          //!< TODO : Documentation
+    std::string platform;                                        //!< TODO : Documentation
+    Type type { Type::Instance };                                //!< TODO : Documentation
+    bool supported { true };                                     //!< TODO : Documentation
+    std::string deprecatedBy;                                    //!< TODO : Documentation
+    std::string obsoletedBy;                                     //!< TODO : Documentation
+    std::string promotedTo;                                      //!< TODO : Documentation
+    std::vector<std::string> requirments;                        //!< TODO : Documentation
+    std::map<std::string, std::vector<Enumerator>> enumerations; //!< TODO : Documentation
+    std::vector<std::string> types;                              //!< TODO : Documentation
+    std::vector<std::string> functions;                          //!< TODO : Documentation
 };
 
 /**

@@ -131,12 +131,20 @@ inline void print_element(const dst::vk::xml::Handle& handle, size_t tabCount)
 /**
 TODO : Documentation
 */
+inline void print_element(const dst::vk::xml::Enumerator& enumerator, size_t tabCount)
+{
+    print_named_value(enumerator.name, enumerator.value, tabCount);
+}
+
+/**
+TODO : Documentation
+*/
 inline void print_element(const dst::vk::xml::Enumeration& enumeration, size_t tabCount)
 {
     print_element((const dst::vk::xml::Element&)enumeration, tabCount);
     print_named_value("bitMask", enumeration.bitMask, tabCount);
     for (const auto& enumerator : enumeration.enumerators) {
-        print_named_value(enumerator.name, enumerator.value, tabCount + 1);
+        print_element(enumerator, tabCount + 1);
     }
 }
 
@@ -207,9 +215,12 @@ inline void print_element(const dst::vk::xml::Extension& extension, size_t tabCo
     print_named_value("promotedTo", extension.promotedTo, tabCount);
     print_named_collection("requirements", extension.requirments, tabCount);
     if (!extension.enumerations.empty()) {
-        std::cout << tab(tabCount) << "enumerations :" << std::endl;
+        print_value("enumerations", tabCount + 1);
         for (auto const& enumeration : extension.enumerations) {
-            print_named_collection(enumeration.first, enumeration.second, tabCount + 1);
+            print_value(enumeration.first, tabCount + 2);
+            for (auto const& enumerator : enumeration.second) {
+                print_element(enumerator, tabCount + 3);
+            }
         }
     }
     print_named_collection("types", extension.types, tabCount);
@@ -236,28 +247,20 @@ inline void print_element_manifest(
 
 int main(int argc, char* argv[])
 {
-    #if 0
-    if (false && argc <= 1) {
-        print_help();
-    } else {
-        std::string vkXmlFilePath = argc > 1 ? argv[1] : std::string();
-    #endif
-        tinyxml2::XMLDocument vkXml;
-        auto result = vkXml.LoadFile(DYNAMIC_STATIC_VK_XML_FILE_PATH);
-        if (result == tinyxml2::XML_SUCCESS) {
-            dst::vk::xml::Manifest vkXmlManifest(vkXml);
-            std::cout << std::endl;
-            std::cout << "Vulkan XML Manifest" << std::endl;
-            print_element_manifest("platforms", vkXmlManifest.platforms);
-            print_element_manifest("vendors", vkXmlManifest.vendors);
-            print_element_manifest("handles", vkXmlManifest.handles);
-            print_element_manifest("enumerations", vkXmlManifest.enumerations);
-            print_element_manifest("structures", vkXmlManifest.structures);
-            print_element_manifest("functions", vkXmlManifest.functions);
-            print_element_manifest("extensions", vkXmlManifest.extensions);
-        }
-    #if 0
+    std::string vkXmlFilePath = argc > 1 ? argv[1] : DYNAMIC_STATIC_VK_XML_FILE_PATH;
+    tinyxml2::XMLDocument vkXml;
+    auto result = vkXml.LoadFile(vkXmlFilePath.c_str());
+    if (result == tinyxml2::XML_SUCCESS) {
+        dst::vk::xml::Manifest vkXmlManifest(vkXml);
+        std::cout << std::endl;
+        std::cout << "Vulkan XML Manifest" << std::endl;
+        print_element_manifest("platforms", vkXmlManifest.platforms);
+        print_element_manifest("vendors", vkXmlManifest.vendors);
+        print_element_manifest("handles", vkXmlManifest.handles);
+        print_element_manifest("enumerations", vkXmlManifest.enumerations);
+        print_element_manifest("structures", vkXmlManifest.structures);
+        print_element_manifest("functions", vkXmlManifest.functions);
+        print_element_manifest("extensions", vkXmlManifest.extensions);
     }
-    #endif
     return 0;
 }
