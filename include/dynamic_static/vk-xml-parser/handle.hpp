@@ -17,6 +17,7 @@
 #include "tinyxml2.h"
 
 #include <map>
+#include <set>
 #include <vector>
 
 namespace dst {
@@ -47,19 +48,22 @@ public:
         if (!name.empty()) {
             dispatchable = first_child_element_text(xmlElement, "type") == "VK_DEFINE_HANDLE";
             for (const auto& parent : string::split(attribute(xmlElement, "parent"), ',')) {
-                parents.push_back(parent);
+                parents.insert(parent);
             }
         } else {
             name = attribute(xmlElement, "name");
             alias = attribute(xmlElement, "alias");
         }
+        if (name == "VkSwapchainKHR") {
+            parents.insert("VkDevice");
+        }
     }
 
-    std::vector<std::string> parents;  //!< TODO : Documentation
-    std::vector<std::string> children; //!< TODO : Documentation
-    std::string createFunction;        //!< TODO : Documentation
-    std::string destroyFunction;       //!< TODO : Documentation
-    bool dispatchable { false };       //!< TODO : Documentation
+    std::set<std::string> parents;          //!< TODO : Documentation
+    std::set<std::string> createInfos;      //!< TODO : Documentation
+    std::set<std::string> createFunctions;  //!< TODO : Documentation
+    std::set<std::string> destroyFunctions; //!< TODO : Documentation
+    bool dispatchable { false };            //!< TODO : Documentation
 };
 
 /**
@@ -87,13 +91,6 @@ public:
                 insert(Handle(*pXmlElement));
             }
             pXmlElement = pXmlElement->NextSiblingElement();
-        }
-        for (auto handleItr : *this) {
-            for (const auto& parent : handleItr.second.parents) {
-                auto parentItr = find(parent);
-                assert(parentItr != end() && "TODO : Documentation");
-                parentItr->second.children.push_back(handleItr.second.name);
-            }
         }
     }
 };

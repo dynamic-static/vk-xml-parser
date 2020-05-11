@@ -55,8 +55,9 @@ public:
         process_element_vendors(functions);
         process_element_vendors(extensions);
         process_extensions();
-        process_object_types();
-        process_structure_types();
+        post_process_handle();
+        post_process_object_types();
+        post_process_structure_types();
     }
 
     Platform::Manifest platforms;                      //!< TODO : Documentation
@@ -133,12 +134,43 @@ private:
         return false;
     }
 
-    inline void process_object_types()
+    inline void post_process_handle()
+    {
+        for (const auto& vkFunctionItr : functions) {
+            auto const& vkFunction = vkFunctionItr.second;
+            if (vkFunction.parameters.size() > 1) {
+                switch (vkFunction.type) {
+                case Function::Type::Create: {
+                    const auto& vkHandleParameter = vkFunction.parameters.back();
+                    auto vkHandleItr = handles.find(vkHandleParameter.unqualifiedType);
+                    if (vkHandleItr != handles.end()) {
+                        vkHandleItr->second.createFunctions.insert(vkFunction.name);
+                        for (const auto& vkParameter : vkFunction.parameters) {
+                            if (structures.count(vkParameter.unqualifiedType) && vkParameter.unqualifiedType != "VkAllocationCallbacks") {
+                                vkHandleItr->second.createInfos.insert(vkParameter.unqualifiedType);
+                            }
+                        }
+                    }
+                } break;
+                case Function::Type::Destroy: {
+                    auto vkHandleParameterIndex = vkFunction.parameters.size() - 2;
+                    const auto& vkHandleParameter = vkFunction.parameters[vkHandleParameterIndex];
+                    auto vkHandleItr = handles.find(vkHandleParameter.unqualifiedType);
+                    if (vkHandleItr != handles.end()) {
+                        vkHandleItr->second.destroyFunctions.insert(vkFunction.name);
+                    }
+                } break;
+                }
+            }
+        }
+    }
+
+    inline void post_process_object_types()
     {
         // TODO :
     }
 
-    inline void process_structure_types()
+    inline void post_process_structure_types()
     {
         auto vkStructureTypeEnumerationItr = enumerations.find("VkStructureType");
         assert(vkStructureTypeEnumerationItr != enumerations.end());
