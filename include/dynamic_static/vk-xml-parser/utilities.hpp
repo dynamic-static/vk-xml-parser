@@ -14,6 +14,7 @@
 
 #include "tinyxml2.h"
 
+#include <cassert>
 #include <string>
 
 namespace dst {
