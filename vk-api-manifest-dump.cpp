@@ -62,7 +62,8 @@ inline void print_named_value(const std::string& name, bool value, size_t tabCou
 /**
 TODO : Documentation
 */
-inline void print_named_collection(const std::string& name, const std::vector<std::string>& collection, size_t tabCount)
+template <typename CollectionType>
+inline void print_named_collection(const std::string& name, const CollectionType& collection, size_t tabCount)
 {
     if (!name.empty() && !collection.empty()) {
         std::cout << tab(tabCount) << name << " :" << std::endl;
@@ -125,7 +126,9 @@ inline void print_element(const dst::vk::xml::Handle& handle, size_t tabCount)
     print_element((const dst::vk::xml::Element&)handle, tabCount);
     print_named_value("dispatchable", handle.dispatchable, tabCount);
     print_named_collection("parents", handle.parents, tabCount);
+    #if 0
     print_named_collection("children", handle.children, tabCount);
+    #endif
 }
 
 /**
