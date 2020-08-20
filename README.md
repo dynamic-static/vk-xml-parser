@@ -1,1 +1,1 @@
-# Dynamic_Static.VkXmlParser
+# dynamic_static.vk-xml-parser
