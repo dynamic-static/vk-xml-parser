@@ -12,13 +12,9 @@ project(dynamic_static.vk-xml-parser VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(dynamic_static "${CMAKE_CURRENT_LIST_DIR}/../")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
-
 ################################################################################
-#### include("${dynamic_static}/dynamic_static.CMake/dynamic_static.ex.cmake")
-#### DstAddSubdirectory("dynamic_static.Core")
-include("${CMAKE_CURRENT_LIST_DIR}/../cmake/dynamic_static.cmake")
-dst_add_subdirectory(core)
-# add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../core/" "${CMAKE_CURRENT_BINARY_DIR}/dynamic_static/core/")
+include("${CMAKE_CURRENT_LIST_DIR}/../dynamic_static.build/dynamic_static.cmake")
+dst_add_subdirectory(dynamic_static.core)
 ################################################################################
 
 # External dependencies
@@ -70,7 +66,7 @@ dst_add_executable(
 # dynamic_static.cpp-generator.tests
 if(DST_CORE_BUILD_TESTS)
     set(testsPath "${dynamic_static.vk-xml-parser_SOURCE_DIR}/tests/")
-    dst_add_test_suite(
+    dst_add_target_test_suite(
         target
             dynamic_static.vk-xml-parser
         sourceFiles
