@@ -18,7 +18,9 @@
 
 #include <map>
 #include <set>
-#include <vector>
+#include <unordered_set>
+
+#include <iostream>
 
 namespace dst {
 namespace vk {
@@ -91,6 +93,42 @@ public:
                 insert(Handle(*pXmlElement));
             }
             pXmlElement = pXmlElement->NextSiblingElement();
+        }
+    }
+
+    /**
+    TODO : Documentation
+    */
+    template <typename ProcessHandleFunctionType>
+    inline void enumerate_dependencies(const Handle& handle, ProcessHandleFunctionType processHandle) const
+    {
+        for (const auto& parent : handle.parents) {
+            const auto& handleItr = find(parent);
+            assert(handleItr != end());
+            enumerate_dependencies(handleItr->second, processHandle);
+        }
+        processHandle(handle);
+    }
+
+    /**
+    TODO : Documentation
+    */
+    template <typename ProcessHandleFunctionType>
+    inline void enumerate_in_dependency_order(ProcessHandleFunctionType processHandle) const
+    {
+        std::unordered_set<const Handle*> processedHandles;
+        for (const auto& handleItr : *this) {
+            enumerate_dependencies(handleItr.second,
+                [&](const Handle& handle)
+                {
+                    if (processedHandles.insert(&handle).second) {
+                        processHandle(handle);
+                    }
+                }
+            );
+            if (processedHandles.insert(&handleItr.second).second) {
+                processHandle(handleItr.second);
+            }
         }
     }
 };
