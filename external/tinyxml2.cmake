@@ -14,6 +14,7 @@ FetchContent_Declare(
     "https://github.com/leethomason/tinyxml2.git"
     GIT_TAG 8.0.0
     GIT_PROGRESS TRUE
+    FETCHCONTENT_UPDATES_DISCONNECTED
 )
 FetchContent_MakeAvailable(tinyxml2)
 set_target_properties(tinyxml2 PROPERTIES FOLDER "external/")
