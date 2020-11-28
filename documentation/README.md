@@ -1,4 +1,4 @@
 
-# Dynamic_Static.System documentation
+# dynamic_static.vk-xml-parser documentation
 
 TODO : More README...
