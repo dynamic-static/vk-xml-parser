@@ -15,6 +15,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 set(external "${CMAKE_CURRENT_LIST_DIR}/external/")
 include("${external}/dynamic_static.build.cmake")
+include("${external}/dynamic_static.core.cmake")
 include("${external}/tinyxml2.cmake")
 find_package(Vulkan REQUIRED)
 set(Vulkan_SDK_DIR "${Vulkan_INCLUDE_DIRS}/../")
