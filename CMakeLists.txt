@@ -12,17 +12,13 @@ project(dynamic_static.vk-xml-parser VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(dynamic_static "${CMAKE_CURRENT_LIST_DIR}/../")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
-################################################################################
-include("${CMAKE_CURRENT_LIST_DIR}/../dynamic_static.build/dynamic_static.cmake")
-dst_add_subdirectory(dynamic_static.core)
-################################################################################
 
-# External dependencies
-set(externalDirectory "${CMAKE_CURRENT_LIST_DIR}/external/")
+set(external "${CMAKE_CURRENT_LIST_DIR}/external/")
+include("${external}/dynamic_static.build.cmake")
+include("${external}/tinyxml2.cmake")
 find_package(Vulkan REQUIRED)
 set(Vulkan_SDK_DIR "${Vulkan_INCLUDE_DIRS}/../")
 set(Vulkan_XML "${Vulkan_SDK_DIR}/share/vulkan/registry/vk.xml")
-include(tinyxml2)
 
 # dynamic_static.VkXmlParser library
 set(includeDirectory "${CMAKE_CURRENT_LIST_DIR}/include/")
