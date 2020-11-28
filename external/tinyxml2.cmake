@@ -18,3 +18,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tinyxml2)
 set_target_properties(tinyxml2 PROPERTIES FOLDER "external/")
 # TODO : Clean up tinyxml2 "uninstall" target
+# TODO : Configure tinyxml2 tests

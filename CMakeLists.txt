@@ -6,20 +6,18 @@
 #     http://opensource.org/licenses/MIT
 # ==========================================
 
-# dynamic_static.Graphics CMake configuration
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 project(dynamic_static.vk-xml-parser VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
-set(dynamic_static "${CMAKE_CURRENT_LIST_DIR}/../")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
+# Dependencies
+find_package(Vulkan REQUIRED)
+set(Vulkan_SDK_DIR "${Vulkan_INCLUDE_DIRS}/../")
+set(Vulkan_XML "${Vulkan_SDK_DIR}/share/vulkan/registry/vk.xml")
 set(external "${CMAKE_CURRENT_LIST_DIR}/external/")
 include("${external}/dynamic_static.build.cmake")
 include("${external}/dynamic_static.core.cmake")
 include("${external}/tinyxml2.cmake")
-find_package(Vulkan REQUIRED)
-set(Vulkan_SDK_DIR "${Vulkan_INCLUDE_DIRS}/../")
-set(Vulkan_XML "${Vulkan_SDK_DIR}/share/vulkan/registry/vk.xml")
 
 # dynamic_static.VkXmlParser library
 set(includeDirectory "${CMAKE_CURRENT_LIST_DIR}/include/")
