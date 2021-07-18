@@ -1,7 +1,6 @@
 
 # ==========================================
-#   Copyright (c) 2020 dynamic_static
-#     Patrick Purcell
+#   Copyright (c) 2020-2021 dynamic_static
 #       Licensed under the MIT license
 #     http://opensource.org/licenses/MIT
 # ==========================================
